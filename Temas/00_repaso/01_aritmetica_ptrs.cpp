@@ -45,5 +45,16 @@ int main() {
     cout << "ptr_3 = ptr_4: " << (ptr_3 == ptr_4) << endl;
     cout << "ptr_3 != ptr_4: " << (ptr_3 != ptr_4) << endl;
 
+    /*USANDO ARITMÉTICA PARA EL ACCESO*/
+    int arr[4] = {3,7,1,4}; // arr es implicitamente un int* arr 
+    int* p = arr; // p apunta a la misma dirección que arr (1er elemento de arr)
+    cout << "contenido de arr[1]: " << *p << endl; // *arr = *p
+    *p = 8; // equivalente a *arr = 8;
+    cout << "contenido de arr[1]: " << *arr << endl;
+
+    cout << "contenido de arr[2]: " << *(p + 1) << endl;
+    *(p + 1) = 100;
+    cout << "contenido de arr[2]: " << *(p + 1) << endl;
+
     return 0;
 }

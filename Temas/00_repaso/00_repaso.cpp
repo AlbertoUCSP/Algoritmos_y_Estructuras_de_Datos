@@ -26,5 +26,14 @@ int main() {
     int* ptr_m = &m;
     cout << *ptr_n << " " << *ptr_m << endl;
 
+    /***OPERADORES PARA PUNTEROS***/
+    int x = 3;
+    int* p = &x; // (*)declaración y (&)asignación del puntero 
+    cout << "valor en la direccion del ptr: " << *p << endl; // (*)acceso al contenido apuntado por el puntero
+    
+    int &r = x; // (&)creación de una referencia/alias, osea misma variable con 2 nombres [x,r = 3]
+    r = 7; // x = 7
+    cout << "valor en la direccion del ptr: " << *p << endl; // (*)acceso al contenido apuntado por el puntero
+
     return 0;
 }
