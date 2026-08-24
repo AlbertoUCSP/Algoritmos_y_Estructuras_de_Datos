@@ -13,7 +13,7 @@ int main() {
     int*** z = &q;
     cout << "direccion de q: " << z << "\ncontenido de q: " << **z << endl;
 
-    // Modificando a desde z
+    // Modificando a desde puntero z
     cout << "modificando a..." << endl;
     ***z = 1000;
     cout << "nuevo contenido de a: " << a << endl; // a = ***z
