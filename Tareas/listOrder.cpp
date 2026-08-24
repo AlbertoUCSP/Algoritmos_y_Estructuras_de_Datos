@@ -71,6 +71,8 @@ int main() {
     cout << listaOrdenada.find(2) << endl;
     cout << listaOrdenada.find(200) << endl;
     cout << listaOrdenada.find(-2) << endl;
+    cout << listaOrdenada.find(20) << endl;
+    cout << listaOrdenada.find(66) << endl;
 
     return 0;
 }
