@@ -18,7 +18,7 @@ int main() {
     ***z = 1000;
     cout << "nuevo contenido de a: " << a << endl; // a = ***z
 
-    cout << "contenido actual de q: " << **z << "\ncambiando contenido de q..." << endl; 
+    cout << "contenido actual de q: " << *z << "\ncambiando contenido de q..." << endl; 
     int b = 500;
     **z = &b;
     cout << "nuevo contenido de q: " << **z << endl;
