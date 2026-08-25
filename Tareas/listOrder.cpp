@@ -19,13 +19,13 @@ class listOrd {
 
 public:
     //T* find(T value)
-    bool find(T value) {
+    T* find(T value) {
         int* inicio = arr;
         int* fin = arr + (elem - 1);
         T* mitad = inicio + (fin - inicio) / 2;
         while (inicio <= fin) { // Verifica si aun tengo un espacio de busqueda
             if (value == *mitad) {
-                return true;
+                return mitad;
             }
             
             // Decidimos en que mitad buscaremos
@@ -38,11 +38,24 @@ public:
                 mitad = inicio + (fin - inicio) / 2;
             }
         }
-        return false;
+        return inicio;
     };
 
     bool add(T e) {
-        arr[elem] = e;
+        if (elem == tam) {
+            return 0;
+        }
+        int* target = find(e);
+        int* inicioAdd = target;
+        int* fin = arr + (elem - 1);
+
+        for (;inicioAdd < fin; inicioAdd++) { // recorremos desde donde irá el valor 
+            int* tmp = inicioAdd + 1; // variable temporal para guardar los valores y asi no perderlos al moverlos
+            *(inicioAdd + 1) = *inicioAdd; 
+
+        }
+
+
         elem++;
     };
     bool del(T e) {
@@ -61,6 +74,7 @@ public:
 
 int main() {
     listOrd <int, asc<int>, 30> listaOrdenada;
+    /*
     listaOrdenada.add(2);
     listaOrdenada.add(5);
     listaOrdenada.add(20);
@@ -73,6 +87,7 @@ int main() {
     cout << listaOrdenada.find(-2) << endl;
     cout << listaOrdenada.find(20) << endl;
     cout << listaOrdenada.find(66) << endl;
+    */
 
     return 0;
 }
