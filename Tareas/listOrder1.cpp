@@ -46,19 +46,33 @@ public:
             return 0;
         }
         int* target = find(e);
-        int* inicioAdd = target;
-        int* fin = arr + (elem - 1);
+        int* libre = arr + elem;
 
-        for (;inicioAdd < fin; inicioAdd++) { // recorremos desde donde irá el valor 
-            int* tmp = inicioAdd + 1; // variable temporal para guardar los valores y asi no perderlos al moverlos
-            *(inicioAdd + 1) = *inicioAdd; 
-
+        while(libre != target) {
+            *libre = *(libre - 1);
+            libre--;
         }
-
+        *libre = e;
 
         elem++;
+
+        return 1;
     };
     bool del(T e) {
+        if (elem == 0) {
+            return 0;
+        }
+        int* target = find(e);
+        int* fin = arr + (elem - 1);
+
+        if (*target == e) {
+            for(;target < fin ;target++) {
+                *target = *(target + 1);
+        }
+        elem--;
+
+        return 1;
+        }
 
     };
     void print() {
@@ -74,20 +88,22 @@ public:
 
 int main() {
     listOrd <int, asc<int>, 30> listaOrdenada;
-    /*
-    listaOrdenada.add(2);
-    listaOrdenada.add(5);
-    listaOrdenada.add(20);
     listaOrdenada.print();
 
-    cout << "\n" << listaOrdenada.find(5) << endl;
-    cout << listaOrdenada.find(20) << endl;
-    cout << listaOrdenada.find(2) << endl;
-    cout << listaOrdenada.find(200) << endl;
-    cout << listaOrdenada.find(-2) << endl;
-    cout << listaOrdenada.find(20) << endl;
-    cout << listaOrdenada.find(66) << endl;
-    */
+    listaOrdenada.add(2);
+    listaOrdenada.add(3);
+    listaOrdenada.add(1);
+    listaOrdenada.add(0);
+
+    listaOrdenada.print();
+
+    listaOrdenada.del(8);
+    listaOrdenada.del(0);
+    listaOrdenada.del(2);
+
+
+    listaOrdenada.print();
+
 
     return 0;
 }
