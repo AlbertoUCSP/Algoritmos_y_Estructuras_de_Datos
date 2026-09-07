@@ -9,6 +9,9 @@ private:
 
 public:
     CVector (int _size) {
+        if (_size <= 0) {
+            _size = 1;
+        }
         size = _size;
         vector = new int[size];
     }
@@ -17,7 +20,7 @@ public:
         delete[] vector;
     }
 
-    void resize() {
+    void expand() {
         int* newVector = new int[size*2]; // newVector no es otro vector como tal, es un puntero a un nuevo bloque de memoria, como un puntero temporal 
         for (int i{0}; i < elem; i++) {
             newVector[i] = vector[i];
@@ -27,19 +30,23 @@ public:
         size *= 2;
     }
 
-    void less_size() {
-        int* newVector = new int[size / 2];
-        for (int i{0}; i < elem; i++) {
-            newVector[i] = vector[i];
+    void collapse() {
+        if (size <= 1) { // evitamos que collapse reduzca size a 0
+            return;
         }
-        delete[] vector;
-        vector = newVector;
-        size /= 2;
+
+        int* newVector = new int[size / 2]; // creamos un nuevo bloque de memoria con menor tamaño
+        for (int i{0}; i < elem; i++) {
+            newVector[i] = vector[i];       // copiamos los elementos al nuevo bloque
+        }
+        delete[] vector;    // liberamos memoria vieja
+        vector = newVector; // actualizamos la memoria
+        size /= 2;          
     }
 
     void push_back(int n) {
         if (elem == size) {
-            resize();
+            expand();
         }
         vector[elem] = n;
         elem++;
@@ -47,46 +54,75 @@ public:
 
     void push_front(int n) {
         if (elem == size) {
-            resize();
+            expand();
         }
 
-        int* libre = vector + elem;
-        while (libre != vector) {
-            *libre = *(libre - 1);
+        int* libre = vector + elem; // calculamos el primer espacio disponible
+        while (libre != vector) {   // recorremos desde atrás usando el puntero libre
+            *libre = *(libre - 1);  // copiamos los elementos
             libre--;
         }
         vector[0] = n; // *libre = n;
         elem++;
     }
 
-    void pop_back() { 
-        if (elem == size / 2) {
-            less_size();
+    void push_front2(int n) {
+        if (elem == size) {
+            expand();
         }
-        elem--;
+        for (int i{elem}; i > 0; i--) { // empezamos directamente en la última posición disponible
+            vector[i] = vector[i - 1];  // vamos copiando de atrás hacia adelante 
+        }
+        vector[0] = n;
+        elem++;
+    }
+
+    void pop_back() { 
+        if (elem == 0) {
+            cout << "Eliminacion invalida, vector vacio" << endl;
+        }
+        else {
+            if (elem <= size / 2) {
+                collapse();
+            }
+            elem--;
+        }
     }
 
     void pop_front() {
-        if (elem == size / 2) {
-            less_size();
+        if (elem == 0) {
+            cout << "Eliminacion invalida, vector vacio" << endl;
         }
-        for (int i{0}; i < elem - 1; i++) {
-            vector[i] = vector[i + 1];
+        else {
+            if (elem <= size / 2) {
+                collapse();
+            }
+            for (int i{0}; i < elem - 1; i++) {
+                vector[i] = vector[i + 1];
+            }
+            elem--;
         }
-        elem--;
     }
 
     int front() {
+        if (elem == 0) {
+            cout << "Vector vacio" << endl;
+            return 0;
+        }
         return vector[0];
     }
 
     int back() {
+        if (elem == 0) {
+            cout << "Vector vacio" << endl;
+            return 0;
+        }
         return vector[elem - 1];
     }
 
-    /*int& operator[](int i) {
-        return vector[i]; -> *(vector + i)
-    }*/
+    int& operator[](int i) {
+        return vector[i]; // -> *(vector + i)
+    }
 
     void print() {
         cout << "[ ";
@@ -131,6 +167,13 @@ int main() {
     vector.pop_back();
     vector.print();
     vector.pop_front();
+    vector.print();
+    vector.pop_back();
+    vector.print();
+
+    cout << "Cambiando elemento...\n" << "Elemento antes del cambio: " << vector[0] << endl;
+    vector[0] = 21;
+    cout << "Elemento despues del cambio: " << vector[0] << endl;
     vector.print();
 
     return 0;
