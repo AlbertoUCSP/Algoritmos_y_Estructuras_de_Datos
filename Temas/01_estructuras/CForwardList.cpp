@@ -13,7 +13,7 @@ struct Node {
 
 class CForwarList {
 private:
-    Node* head;
+    Node* head; // puntero al pimer elemento siempre
 
 public:
     CForwarList(int n) {
@@ -100,6 +100,16 @@ int main() {
     fl.push_back(400);
     fl.print();
     fl.push_front(25);
+    fl.print();
+    fl.pop_front();
+    fl.print();
+
+    cout << "***ELIMINANDO TODOS LOS ELEMENTOS***" << endl;
+    fl.pop_back();
+    fl.print();
+    fl.pop_front();
+    fl.print();
+    fl.pop_back();
     fl.print();
     fl.pop_front();
     fl.print();
