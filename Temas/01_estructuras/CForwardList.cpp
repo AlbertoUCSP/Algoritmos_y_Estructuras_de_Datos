@@ -14,18 +14,21 @@ struct Node {
 class CForwarList {
 private:
     Node* head; // puntero al pimer elemento siempre
+    int elem = 0;
 
 public:
     CForwarList(int n) {
         Node* firstNode = new Node(n); // creamos el primer nodo con el valor n
         head = firstNode;              // head apunta al primer nodo
+        elem++;
     }
 
-    ~CForwarList() { /**ANALIZAR**/
-        Node* tmp;
-        for (tmp = head; head != nullptr; head = tmp) {
-            tmp = head->next;
-            delete head;
+    ~CForwarList() { 
+        Node* tmp = head;
+        while (head->next != nullptr) {
+            head = head->next;
+            delete tmp;
+            tmp = head;
         }
         delete head;
     }
@@ -37,42 +40,69 @@ public:
             p = p->next;             // vamos actualizando p 
         }
         p->next = newNode;           // conectamos el nuevo nodo con la lista
+        elem++;
     }
 
     void push_front(int n) {
         Node* newNode = new Node(n);
         newNode->next = head;
         head = newNode;
+        elem++;
     }
 
     void pop_back() {
-        Node* prev;      // puntero al nodo anterior
-        Node* p = head;
-        while (p->next != nullptr) {
-            prev = p;    // prev irá avanzando a la posición de p
-            p = p->next; // luego avanzamos p
-            
+        if (elem == 0) {
+            cout << "Lista vacia, no se pueden eliminar elementos" << endl;
         }
-        prev->next = p->next; // el penultimo nodo(que ahora será el último) apunta a nullptr
-        delete p;             // liberamos la memoria del ultimo nodo usando p
+        else {
+            Node* prev;      // puntero al nodo anterior
+            Node* p = head;
+            while (p->next != nullptr) {
+                prev = p;    // prev irá avanzando a la posición de p
+                p = p->next; // luego avanzamos p
+            }
+            prev->next = p->next; // el penultimo nodo(que ahora será el último) apunta a nullptr
+            delete p;             // liberamos la memoria del ultimo nodo usando p
+            elem--;
+        }
     }
 
-    void pop_front() { //**ANALIZAR**/
-        Node* tmp = head->next; // puntero temporal para la eliminación del nodo
-        delete head;
-        head = tmp;
+    void pop_front() { 
+        if (elem == 0) {
+            cout << "Eliminacion invalida, la lista esta vacia" << endl;
+        }
+        else {
+            Node* tmp = head->next; // puntero temporal para la eliminación del nodo
+            delete head;
+            head = tmp;
+            elem--;
+        }
     }
 
     int front() {
+        if (elem == 0) {
+            cout << "Lista vacia, agrega elemento primero" << endl;
+            return 0;
+        }
         return head->value;
     }
 
     int back() {
+        if (elem == 0) {
+            cout << "Lista vacia, agrega elemento primero" << endl;
+            return 0;
+        }
         Node* p = head;
         while (p->next != nullptr) {
             p = p->next;
         }
         return p->value;
+    }
+
+    int& operator[](int n) { //**ANALIZAR**/
+        Node* target = head; 
+        for (int i{0}; i < n; i++, target = target->next) { }
+        return target->value;
     }
 
     void print() {
@@ -104,7 +134,14 @@ int main() {
     fl.pop_front();
     fl.print();
 
-    cout << "***ELIMINANDO TODOS LOS ELEMENTOS***" << endl;
+    cout << "Cambiando valor de nodo en posicion i" << endl;
+    int nodoValor = fl[0];
+    fl[0] = 67;
+    cout << "Valor del nodo antes del cambio: " << nodoValor << endl;
+    cout << "Valor del nodo despues del cambio: " << fl[0] << endl;
+    fl.print();
+
+    /*cout << "***ELIMINANDO TODOS LOS ELEMENTOS***" << endl;
     fl.pop_back();
     fl.print();
     fl.pop_front();
@@ -114,5 +151,10 @@ int main() {
     fl.pop_front();
     fl.print();
 
+    Error al agregar elemento si la lista está vacía
+    fl.push_back(2);
+    fl.push_back(100);
+    fl.print();*/
+     
     return 0;
 }
