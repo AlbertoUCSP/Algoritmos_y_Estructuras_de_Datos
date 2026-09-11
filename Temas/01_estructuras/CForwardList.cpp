@@ -1,4 +1,5 @@
 #include <iostream>
+#include <assert.h>
 using namespace std;
 
 struct Node {
@@ -54,6 +55,11 @@ public:
         if (elem == 0) {
             cout << "Lista vacia, no se pueden eliminar elementos" << endl;
         }
+        else if (elem == 1) { // caso especial si hay un solo nodo
+            delete head;
+            head = nullptr;
+            elem--;
+        }
         else {
             Node* prev;      // puntero al nodo anterior
             Node* p = head;
@@ -99,9 +105,10 @@ public:
         return p->value;
     }
 
-    int& operator[](int n) { //**ANALIZAR**/
+    int& operator[](int index) { //**ANALIZAR**/
+        assert(index >= 0 && index < elem); // controlamos acceso fuera de limites
         Node* target = head; 
-        for (int i{0}; i < n; i++, target = target->next) { }
+        for (int i{0}; i < index; i++, target = target->next) { }
         return target->value;
     }
 
@@ -140,6 +147,8 @@ int main() {
     cout << "Valor del nodo antes del cambio: " << nodoValor << endl;
     cout << "Valor del nodo despues del cambio: " << fl[0] << endl;
     fl.print();
+    cout << fl[2] << endl;
+    // cout << fl[100] << endl; 
 
     /*cout << "***ELIMINANDO TODOS LOS ELEMENTOS***" << endl;
     fl.pop_back();
