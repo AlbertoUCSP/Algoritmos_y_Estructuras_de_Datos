@@ -8,9 +8,9 @@ private:
     int elem = 0; // número inicial de elementos
 
 public:
-    CVector (int _size) {
+    CVector (int _size = 0) {
         if (_size <= 0) {
-            _size = 1;
+            _size = 0;
         }
         size = _size;
         vector = new int[size];
@@ -135,6 +135,7 @@ public:
 };
 
 int main() {
+    
     CVector vector(5);
     cout << "Vector inicial: ";
     vector.print();

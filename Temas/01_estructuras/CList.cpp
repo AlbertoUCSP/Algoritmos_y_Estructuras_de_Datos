@@ -157,6 +157,5 @@ int main() {
     cout << "Nuevo valor del elemento en la posicion 2: " << list[2] << endl;
     list.print();
 
-
     return 0;
 }
