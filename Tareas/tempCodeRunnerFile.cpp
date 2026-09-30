@@ -1,1 +1,1 @@
-int* arr,
+lista1

@@ -10,7 +10,7 @@ private:
 public:
     CVector (int _size = 0) {
         if (_size <= 0) {
-            _size = 0;
+            _size = 1;
         }
         size = _size;
         vector = new int[size];
@@ -21,33 +21,38 @@ public:
     }
 
     void expand() {
-        int* newVector = new int[size*2]; // newVector no es otro vector como tal, es un puntero a un nuevo bloque de memoria, como un puntero temporal 
+        int* newVector = new int[size * 2];
+
         for (int i{0}; i < elem; i++) {
             newVector[i] = vector[i];
         }
-        delete[] vector;    // liberamos la memoria vieja
-        vector = newVector; // actualizamos vector para que apunte a la nueva memoria redimensionada
+
+        delete[] vector;
+        vector = newVector;
         size *= 2;
     }
 
     void collapse() {
-        if (size <= 1) { // evitamos que collapse reduzca size a 0
+        if (size <= 1) {
             return;
         }
 
-        int* newVector = new int[size / 2]; // creamos un nuevo bloque de memoria con menor tamaño
+        int* newVector = new int[size / 2];
+
         for (int i{0}; i < elem; i++) {
-            newVector[i] = vector[i];       // copiamos los elementos al nuevo bloque
+            newVector[i] = vector[i];
         }
-        delete[] vector;    // liberamos memoria vieja
-        vector = newVector; // actualizamos la memoria
-        size /= 2;          
+
+        delete[] vector;
+        vector = newVector;
+        size /= 2;
     }
 
     void push_back(int n) {
         if (elem == size) {
             expand();
         }
+
         vector[elem] = n;
         elem++;
     }
@@ -57,12 +62,14 @@ public:
             expand();
         }
 
-        int* libre = vector + elem; // calculamos el primer espacio disponible
-        while (libre != vector) {   // recorremos desde atrás usando el puntero libre
-            *libre = *(libre - 1);  // copiamos los elementos
+        int* libre = vector + elem;
+
+        while (libre != vector) {
+            *libre = *(libre - 1);
             libre--;
         }
-        vector[0] = n; // *libre = n;
+
+        vector[0] = n;
         elem++;
     }
 
@@ -70,14 +77,16 @@ public:
         if (elem == size) {
             expand();
         }
-        for (int i{elem}; i > 0; i--) { // empezamos directamente en la última posición disponible
-            vector[i] = vector[i - 1];  // vamos copiando de atrás hacia adelante 
+
+        for (int i{elem}; i > 0; i--) {
+            vector[i] = vector[i - 1];
         }
+
         vector[0] = n;
         elem++;
     }
 
-    void pop_back() { 
+    void pop_back() {
         if (elem == 0) {
             cout << "Eliminacion invalida, vector vacio" << endl;
         }
@@ -97,9 +106,11 @@ public:
             if (elem <= size / 2) {
                 collapse();
             }
+
             for (int i{0}; i < elem - 1; i++) {
                 vector[i] = vector[i + 1];
             }
+
             elem--;
         }
     }
@@ -109,6 +120,7 @@ public:
             cout << "Vector vacio" << endl;
             return 0;
         }
+
         return vector[0];
     }
 
@@ -117,11 +129,12 @@ public:
             cout << "Vector vacio" << endl;
             return 0;
         }
+
         return vector[elem - 1];
     }
 
     int& operator[](int i) {
-        return vector[i]; // -> *(vector + i)
+        return vector[i];
     }
 
     int getSize() {
@@ -130,54 +143,59 @@ public:
 
     void print() {
         cout << "[ ";
+
         for (int i{0}; i < elem; i++) {
             cout << vector[i] << " ";
         }
+
         cout << "]" << endl;
     }
-
 };
 
 int main() {
     CVector digitos;
-    int m; // valor
-    int n; // número de dígitos
-    cout << "Ingresa un numero multiplicado por 27: ";
-    cin >> m;
-    cout << "Ingresa el numero de digitos: ";
+
+    int n; // número de dígitos del número original
+
+    cout << "Ingresa el numero de digitos que tiene tu numero: ";
     cin >> n;
 
-    CVector resultado;
-    while (m != 0) {
-            int digito = m % 10;
-            resultado.push_front2(digito);
-            m /= 10;
-        }
-
     cout << "Ingresa todos sus digitos menos uno (no necesariamente en orden)" << endl;
+
     for (int i{0}; i < n - 1; i++) {
         int digito;
+
         cout << "Digito: ";
         cin >> digito;
+
         digitos.push_back(digito);
     }
 
     digitos.print();
 
     int suma = 0;
+
     for (int i{0}; i < digitos.getSize(); i++) {
         suma += digitos[i];
     }
 
     int x = 0;
+
     while (suma % 9 != 0) {
         suma += 1;
         x++;
-        
     }
 
-    digitos.push_back(x);
-    digitos.print();
+    // Si x == 0, el digito faltante puede ser 0 o 9 (ambos hacen que la suma
+    // sea multiplo de 9), y sin el numero original no hay forma de distinguirlos.
+    if (x == 0) {
+        cout << "El digito faltante es 0 o 9 (con la suma no se puede saber cual de los dos es)" << endl;
+    }
+    else {
+        digitos.push_back(x);
+        cout << "Resultado: ";
+        digitos.print();
+    }
 
     return 0;
 }

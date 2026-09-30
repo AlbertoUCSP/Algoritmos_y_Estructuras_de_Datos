@@ -101,7 +101,6 @@ int main() {
     listaOrdenada.del(0);
     listaOrdenada.del(2);
 
-
     listaOrdenada.print();
 
 

@@ -1,7 +1,6 @@
 #include <iostream>
 #include <assert.h>
 using namespace std;
-
 struct Node {
     int value;  // valor almacenado en el nodo
     Node* next; // puntero al siguiente nodo
@@ -12,19 +11,19 @@ struct Node {
     }
 };
 
-class CForwarList {
+class CForwardList {
 private:
     Node* head; // puntero al pimer elemento siempre
     int elem = 0;
 
 public:
-    CForwarList(int n) {
+    CForwardList(int n) {
         Node* firstNode = new Node(n); // creamos el primer nodo con el valor n
         head = firstNode;              // head apunta al primer nodo
         elem++;
     }
 
-    ~CForwarList() { 
+    ~CForwardList() { 
         Node* tmp = head;
         while (head->next != nullptr) {
             head = head->next;
@@ -122,7 +121,7 @@ public:
 };
 
 int main() {
-    CForwarList fl(100);
+    CForwardList fl(100);
     fl.print();
     fl.push_back(200);
     fl.print();
