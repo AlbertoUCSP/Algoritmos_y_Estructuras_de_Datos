@@ -57,7 +57,7 @@ public:
         if (head == nullptr) {
             cout << "Lista vacia, no se pueden eliminar elementos" << endl;
         }
-        else if (elem == 1) { // caso especial si hay un solo nodo
+        else if (head->next == nullptr) { // caso especial si hay un solo nodo
             delete head;
             head = nullptr;
             elem--;

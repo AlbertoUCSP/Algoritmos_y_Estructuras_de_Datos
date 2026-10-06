@@ -4,8 +4,8 @@ using namespace std;
 
 struct Node {
     int value;
-    Node* next;
-    Node* prev;
+    Node* next; // puntero al siguiente nodo
+    Node* prev; // puntero al nodo anterior
 
     Node(int v) {
         value = v;
@@ -16,13 +16,13 @@ struct Node {
 
 class CList {
 private:
-    Node* head;
-    Node* tail;
+    Node* head; // puntero al primer nodo
+    Node* tail; // puntero al último nodo
     int elem;
 
 public:
     CList() {
-        head = tail = nullptr;
+        head = tail = nullptr; // creamos la lista inicialmente vacía
         elem = 0;
     }
 
@@ -36,7 +36,7 @@ public:
     }
 
     void push_back(int n) {
-        if (elem == 0) { // manejamos el caso especial donde la lista está vacía
+        if (head == nullptr && tail == nullptr) { // manejamos el caso especial donde la lista está vacía
             Node* newNode = new Node(n);
             head = tail = newNode;
         }
@@ -50,10 +50,10 @@ public:
     }
 
     void pop_back() {
-        if (elem == 0) {
+        if (head == nullptr && tail == nullptr) {
             cout << "Eliminacion invalida, lista vacia" << endl;
         }
-        else if (elem == 1) {
+        else if (tail == head) {
             delete tail;
             tail = head = nullptr;
             elem--;
@@ -67,7 +67,7 @@ public:
     } 
 
     void push_front(int n) {
-        if (elem == 0) { // manejamos el caso especial donde la lista está vacía
+        if (head == nullptr && tail == nullptr) { // manejamos el caso especial donde la lista está vacía
             Node* newNode = new Node(n);
             head = tail = newNode;
         }
@@ -81,10 +81,10 @@ public:
     }
 
     void pop_front() {
-        if (elem == 0) {
+        if (head == nullptr && tail == nullptr) {
             cout << "Eliminacion invalida, lista vacia" << endl;
         }
-        else if (elem == 1) {
+        else if (head == tail) {
             delete head;
             head = tail = nullptr;
             elem--;
@@ -98,14 +98,14 @@ public:
     }
 
     int front() {
-        if (elem == 0) {
+        if (head == nullptr && tail == nullptr) {
             return 0;
         }
         return head->value;
     }
 
     int back() {
-        if ( elem == 0) {
+        if ( head == nullptr && tail == nullptr) {
             return 0;
         }
         return tail->value;
