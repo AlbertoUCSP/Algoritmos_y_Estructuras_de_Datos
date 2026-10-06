@@ -125,13 +125,44 @@ public:
         return root;
     }
 
+    // IN ORDER: LEFT -> PADRE -> RIGHT (menor a mayor)
     void inOrder(Node* p) {
         if (p == nullptr) {
             return;
         }
-        inOrder(p->left);
+        inOrder(p->left);        // left
+        cout << p->value << " "; // padre
+        inOrder(p->right);       // right
+    }
+
+    // PRE ORDER: PADRE -> LEFT -> RIGHT
+    void preOrder(Node* p) {
+        if (p == nullptr) {
+            return;
+        }
         cout << p->value << " ";
-        inOrder(p->right);
+        preOrder(p->left);
+        preOrder(p->right);
+    }
+
+    // POST ORDER: LEFT -> RIGHT -> PADRE
+    void postOrder(Node* p) {
+        if (p == nullptr) {
+            return;
+        }
+        postOrder(p->left);
+        postOrder(p->right);
+        cout << p->value << " ";
+    }
+
+    // REVERSE: RIGHT -> PADRE -> LEFT (mayor a menor)
+    void reverse(Node* p) {
+        if (p == nullptr) {
+            return;
+        }
+        reverse(p->right);
+        cout << p->value << " ";
+        reverse(p->left);
     }
 };
 
@@ -139,16 +170,25 @@ int main() {
     CBinaryTree tree;
     Node** p; 
 
-    tree.insert(100);
-    tree.insert(90);
-    tree.insert(110);
-    tree.insert(120);
+    tree.insert(52);
+    tree.insert(43);
+    tree.insert(73);
+    tree.insert(31);
+    tree.insert(47);
+    tree.insert(61);
+    tree.insert(84);
 
     cout << tree.find(100, p) << endl;
     tree.remove(100);
     cout << tree.find(100, p) << endl;
 
+    cout << "RECORRIDO IN ORDER: ";
     tree.inOrder(tree.getRoot());
-
+    cout << "\nRECORRIDO PRE ORDER: ";
+    tree.preOrder(tree.getRoot());
+    cout << "\nRECORRIDO POST ORDER: ";
+    tree.postOrder(tree.getRoot());
+    cout << "\nRECORRIDO REVERSE: ";
+    tree.reverse(tree.getRoot());
     return 0;
 }
