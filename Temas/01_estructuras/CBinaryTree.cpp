@@ -120,6 +120,19 @@ public:
             }
         }
     }
+
+    Node* getRoot() {
+        return root;
+    }
+
+    void inOrder(Node* p) {
+        if (p == nullptr) {
+            return;
+        }
+        inOrder(p->left);
+        cout << p->value << " ";
+        inOrder(p->right);
+    }
 };
 
 int main() {
@@ -134,6 +147,8 @@ int main() {
     cout << tree.find(100, p) << endl;
     tree.remove(100);
     cout << tree.find(100, p) << endl;
+
+    tree.inOrder(tree.getRoot());
 
     return 0;
 }
