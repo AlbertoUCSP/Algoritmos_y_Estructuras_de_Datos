@@ -14,13 +14,12 @@ struct Node {
 class CForwardList {
 private:
     Node* head; // puntero al pimer elemento siempre
-    int elem = 0;
+    int elem;
 
 public:
-    CForwardList(int n) {
-        Node* firstNode = new Node(n); // creamos el primer nodo con el valor n
-        head = firstNode;              // head apunta al primer nodo
-        elem++;
+    CForwardList() {
+        head = nullptr;
+        elem = 0;
     }
 
     ~CForwardList() { 
@@ -34,13 +33,17 @@ public:
     }
 
     void push_back(int n) {
-        Node* newNode = new Node(n); // creamos un nuevo nodo
-        Node* p = head;              // p nos ayudará a recorrer la lista
-        while (p->next != nullptr) { 
-            p = p->next;             // vamos actualizando p 
+        if (head == nullptr) {
+            Node* newNode = new Node(n);
+            head = newNode;
+            elem++;
         }
-        p->next = newNode;           // conectamos el nuevo nodo con la lista
-        elem++;
+        else {
+            Node* p = head;
+            for (; p->next != nullptr; p = p->next) {}
+            p->next = new Node(n);
+            elem++;
+        }
     }
 
     void push_front(int n) {
@@ -51,7 +54,7 @@ public:
     }
 
     void pop_back() {
-        if (elem == 0) {
+        if (head == nullptr) {
             cout << "Lista vacia, no se pueden eliminar elementos" << endl;
         }
         else if (elem == 1) { // caso especial si hay un solo nodo
@@ -73,7 +76,7 @@ public:
     }
 
     void pop_front() { 
-        if (elem == 0) {
+        if (head == nullptr) {
             cout << "Eliminacion invalida, la lista esta vacia" << endl;
         }
         else {
@@ -85,7 +88,7 @@ public:
     }
 
     int front() {
-        if (elem == 0) {
+        if (head == nullptr ) {
             cout << "Lista vacia, agrega elemento primero" << endl;
             return 0;
         }
@@ -93,7 +96,7 @@ public:
     }
 
     int back() {
-        if (elem == 0) {
+        if (head == nullptr) {
             cout << "Lista vacia, agrega elemento primero" << endl;
             return 0;
         }
@@ -121,7 +124,7 @@ public:
 };
 
 int main() {
-    CForwardList fl(100);
+    CForwardList fl;
     fl.print();
     fl.push_back(200);
     fl.print();
@@ -147,9 +150,9 @@ int main() {
     cout << "Valor del nodo despues del cambio: " << fl[0] << endl;
     fl.print();
     cout << fl[2] << endl;
-    // cout << fl[100] << endl; 
+    //cout << fl[100] << endl; 
 
-    /*cout << "***ELIMINANDO TODOS LOS ELEMENTOS***" << endl;
+    cout << "***ELIMINANDO TODOS LOS ELEMENTOS***" << endl;
     fl.pop_back();
     fl.print();
     fl.pop_front();
@@ -159,10 +162,11 @@ int main() {
     fl.pop_front();
     fl.print();
 
-    Error al agregar elemento si la lista está vacía
+    //Error al agregar elemento si la lista está vacía (solucionado)
     fl.push_back(2);
     fl.push_back(100);
-    fl.print();*/
+    fl.print();
      
     return 0;
+    
 }
