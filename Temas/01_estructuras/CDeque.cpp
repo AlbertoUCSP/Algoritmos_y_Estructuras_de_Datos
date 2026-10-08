@@ -59,29 +59,43 @@ public:
     }
 
     void pop_back() {
-        if (fin_elem != *fin_map) {
+        if (elem == 0) {
+            cout << "Eliminacion invalida, Deque vacio" << endl;
+            return;
+        }
+        else if (fin_elem == ini_elem) {
+            ini_map = fin_map = map + (map_size / 2);
+            ini_elem = fin_elem = *ini_map + (chunk_size / 2);
+        }
+        else if (fin_elem != *fin_map) {
             fin_elem--;
-            elem--;
         }
         else {
             fin_elem = *(fin_map - 1) + (chunk_size - 1);
             delete[] *fin_map;
             fin_map--;
-            elem--;
         }
+        elem--;
     }
 
     void pop_front() {
-        if (ini_elem != *ini_map + (chunk_size - 1)) {
+        if (elem == 0) {
+            cout << "Eliminacion invalida, Deque vacio" << endl;
+            return;
+        }
+        else if (ini_elem == fin_elem) {
+            ini_map = fin_map = map + (map_size / 2);
+            ini_elem = fin_elem = *ini_map + (chunk_size / 2);
+        }
+        else if (ini_elem != *ini_map + (chunk_size - 1)) {
             ini_elem++;
-            elem--;
         }
         else {
             ini_elem = *(ini_map + 1);
             delete[] *ini_map;
             ini_map++;
-            elem--;
         }
+        elem--;
     }
 
     void print() { //PENDIENTE
