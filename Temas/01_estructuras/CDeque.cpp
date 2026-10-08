@@ -31,41 +31,57 @@ public:
     }
 
     void push_back(int n) {
-        if (fin_elem != *fin_map + chunk_size) {
-            *fin_elem = n;
+        if (fin_elem != *fin_map + (chunk_size - 1)) {
             fin_elem++;
+            *fin_elem = n;
         }
         else {
             fin_map++;
             *fin_map = new int[chunk_size];
             fin_elem = *fin_map;
             *fin_elem = n;
-            fin_elem++;
         }
         elem++;
     }
 
     void push_front(int n) {
         if (ini_elem != *ini_map) {
-            *ini_elem = n;
             ini_elem--;
+            *ini_elem = n;
         }
         else {
             ini_map--;
             *ini_map = new int[chunk_size];
             ini_elem = *ini_map + (chunk_size - 1);
             *ini_elem = n;
-            ini_elem--; 
         }
         elem++;
     }
 
     void pop_back() {
-        
+        if (fin_elem != *fin_map) {
+            fin_elem--;
+            elem--;
+        }
+        else {
+            fin_elem = *(fin_map - 1) + (chunk_size - 1);
+            delete[] *fin_map;
+            fin_map--;
+            elem--;
+        }
     }
 
     void pop_front() {
-
+        if (ini_elem != *ini_map + (chunk_size - 1)) {
+            ini_elem++;
+            elem--;
+        }
+        else {
+            ini_elem = *(ini_map + 1);
+            delete[] *ini_map;
+            ini_map++;
+            elem--;
+        }
     }
 
     void print() {

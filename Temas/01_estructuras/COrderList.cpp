@@ -27,11 +27,11 @@ public:
 
     bool find(int n, Node**& p) {
         p = &head;
-        if (head == nullptr) {
-            return 0;
+        if (head == nullptr) { // si la lista está vacía no hay nada que buscar, retornamos 
+            return 0;  
         }
         else {
-            for (; (*p) && n > (*p)->value; p = &(*p)->next) { }
+            for (; *p != nullptr && n > (*p)->value; p = &(*p)->next) { } // mientras p apunte a un nodo válido y n sea mayor que el valor del nodo actual, avanzo al siguiente nodo. 
             if (*p == nullptr) {
                 return 0;
             }
