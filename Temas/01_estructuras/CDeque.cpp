@@ -30,26 +30,51 @@ public:
 
     }
 
+    void expand() {
+        int newSize = map_size * 2;
+        int** newMap = new int*[newSize]; // creamos un nuevo mapa con el doble de tamaño
+        
+        // inicio y fin del nuevo mapa
+        int** new_ini_map;
+        int** new_fin_map;
+
+        // variables de apoyo para copiar los elementos
+        int** centro = map + (map_size / 2); // puntero al centro del map original
+        int offset = 0;                      // offset para ir moviendome entre los chunks del mapa original
+
+        // inicializamos los nuevos punteros
+        new_ini_map = new_fin_map = newMap + (newSize / 2);
+
+        // copiando los elementos
+        while (ini_map <= fin_map) {
+            *new_ini_map = *(centro - offset);
+            new_ini_map--;
+            offset++;
+            new_fin_map++;
+            *new_fin_map = *centro + offset;
+        }     
+    }
+
     void push_back(int n) {
-        if (fin_elem != *fin_map + (chunk_size - 1)) {
-            fin_elem++;
-            *fin_elem = n;
+        if (fin_elem != *fin_map + (chunk_size - 1)) { // si aún hay espacio hacia la derecha 
+            fin_elem++;     // avanzamos al siguiente espacio disponible
+            *fin_elem = n;  // insertamos el valor
         }
-        else {
-            fin_map++;
-            *fin_map = new int[chunk_size];
-            fin_elem = *fin_map;
-            *fin_elem = n;
+        else { // si fin_elem es el final del chunk es porque ya no hay espacio hacia la derecha
+            fin_map++; // avanzamos el final del mapa
+            *fin_map = new int[chunk_size]; // creamos un nuvo chunk
+            fin_elem = *fin_map; // actualizamos el final de los elementos
+            *fin_elem = n;       // insertamos el valor
         }
         elem++;
     }
 
     void push_front(int n) {
-        if (ini_elem != *ini_map) {
-            ini_elem--;
-            *ini_elem = n;
+        if (ini_elem != *ini_map) { // si aún hay espacio hacia la izquierda
+            ini_elem--;    
+            *ini_elem = n; 
         }
-        else {
+        else { // si ini_elem es el inicio del chunk es porque ya no hay espacio hacia la izquierda
             ini_map--;
             *ini_map = new int[chunk_size];
             ini_elem = *ini_map + (chunk_size - 1);
