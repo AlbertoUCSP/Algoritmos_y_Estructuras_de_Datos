@@ -58,6 +58,8 @@ public:
         }
     }
 
+    // remove PENDIENTE
+
     void print() {
         Node* p;
         for (p = head; p != nullptr; p = p->next) {

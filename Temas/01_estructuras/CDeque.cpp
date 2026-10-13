@@ -55,6 +55,8 @@ public:
         }     
     }
 
+    // collapse PENDIENTE
+
     void push_back(int n) {
         if (fin_elem != *fin_map + (chunk_size - 1)) { // si aún hay espacio hacia la derecha 
             fin_elem++;     // avanzamos al siguiente espacio disponible

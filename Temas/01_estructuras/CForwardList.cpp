@@ -121,6 +121,8 @@ public:
         }
         cout << "NULL\n";
     }
+
+    //void insert() PENDIENTE
 };
 
 int main() {

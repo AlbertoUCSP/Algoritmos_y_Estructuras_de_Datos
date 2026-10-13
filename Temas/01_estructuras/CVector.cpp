@@ -8,9 +8,9 @@ private:
     int elem = 0; // número inicial de elementos
 
 public:
-    CVector (int _size = 0) {
+    CVector (int _size) {
         if (_size <= 0) {
-            _size = 0;
+            _size = 1;
         }
         size = _size;
         vector = new int[size];
