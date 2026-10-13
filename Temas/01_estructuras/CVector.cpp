@@ -20,6 +20,24 @@ public:
         delete[] vector;
     }
 
+    bool isEmpty() {
+        if (elem == 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    bool isFull() {
+        if (elem == size) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+
     void expand() {
         int* newVector = new int[size*2]; // newVector no es otro vector como tal, es un puntero a un nuevo bloque de memoria, como un puntero temporal 
         for (int i{0}; i < elem; i++) {
@@ -122,6 +140,10 @@ public:
 
     int& operator[](int i) {
         return vector[i]; // -> *(vector + i)
+    }
+
+    int getElem() {
+        return elem;
     }
 
     void print() {
