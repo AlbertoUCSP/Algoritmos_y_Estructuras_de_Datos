@@ -1,6 +1,5 @@
 #include <iostream>
 using namespace std;
-
 class CVector {
 private:
     int* vector;  // puntero al vector
@@ -8,9 +7,9 @@ private:
     int elem = 0; // número inicial de elementos
 
 public:
-    CVector (int _size = 0) {
+    CVector (int _size) {
         if (_size <= 0) {
-            _size = 0;
+            _size = 1;
         }
         size = _size;
         vector = new int[size];
@@ -142,7 +141,7 @@ public:
         return vector[i]; // -> *(vector + i)
     }
 
-    int getSize() {
+    int getElem() {
         return elem;
     }
 
@@ -172,8 +171,8 @@ public:
         }
     }
 
-    int size() {
-        return vector.getSize();
+    int getElem() {
+        return vector.getElem();
     }
 
     void push(int x) {
@@ -191,21 +190,25 @@ public:
     }
 
     int top() {
-        return vector.back();
+        if (vector.isEmpty() == 1) {
+            return -1;
+        }
+        else  {
+            return vector.back();
+        }
     }
 
     void print() {
-        if (vector.getSize() == 0) {
+        if (vector.getElem() == 0) {
             cout << "Stack vacio" << endl;
         }
         else {
             cout << "STACK " << endl;
-            for (int i{vector.getSize()}; i > 0; i--) {
+            for (int i{vector.getElem()}; i > 0; i--) {
                 cout << vector[i - 1] << endl;
             }
         }
     }
-
 };
 
 int main() {
@@ -218,6 +221,7 @@ int main() {
     stack.print();
 
     cout << "Top: " << stack.top() << endl;
+    cout << "Elementos: " << stack.getElem() << endl;
     cout << "Eiminando elementos..." << endl;
 
     stack.pop();
@@ -236,6 +240,13 @@ int main() {
     stack.push(22);
     stack.print();
 
+    cout << "Elementos: " << stack.getElem() << endl;
+
+    stack.pop();
+    stack.pop();
+    stack.print();
+    cout << "Elementos: " << stack.getElem() << endl;
+    cout << "top: " << stack.top() << endl; 
 
     return 0;
 }
