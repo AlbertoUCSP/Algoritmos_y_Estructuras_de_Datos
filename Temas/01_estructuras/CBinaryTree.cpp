@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stack>
+#include <queue>
 using namespace std;
 
 struct Node {
@@ -107,6 +108,7 @@ public:
                     p = &(*p)->right;
                 }
                 swap(q->value, (*p)->value); // cambiamos los valores (como intercambiar los nodos) y convertimos a caso 0 o caso 1
+                
                 /**ANALIZAMOS LOS CASOS PARA PODER ELIMINAR**/
                 // Caso 0: nodo sin hijos
                 if ((*p)->left == nullptr && (*p)->right == nullptr) {
@@ -178,141 +180,166 @@ public:
     /***RECORRIDOS CON ESTADO***/
     // IN ORDER: LEFT -> PADRE -> RIGHT (menor a mayor)
     void inOrder_s(stack<Item>& st) {
-
-        switch (st.top().state)
-        {
-        case 0: {
-            st.top().state = 1;
-            if (st.top().p->left != nullptr) {
-                Item i(st.top().p->left, 0);
-                st.push(i);
+        while (st.empty() != 1) {
+            switch (st.top().state)
+            {
+            case 0: {
+                st.top().state = 1;
+                if (st.top().p->left != nullptr) {
+                    Item i(st.top().p->left, 0);
+                    st.push(i);
+                }
+                break;
             }
-            break;
-        }
-        case 1: {
-            st.top().state = 2;
-            cout << st.top().p->value << " ";
-            break;
-        }
-        case 2: {
-            st.top().state = 3;
-            if (st.top().p->right != nullptr) {
-                Item i(st.top().p->right, 0);
-                st.push(i);
+            case 1: {
+                st.top().state = 2;
+                cout << st.top().p->value << " ";
+                break;
             }
-            break;
+            case 2: {
+                st.top().state = 3;
+                if (st.top().p->right != nullptr) {
+                    Item i(st.top().p->right, 0);
+                    st.push(i);
+                }
+                break;
+            }
+            case 3: {
+                st.pop();
+                break;
+            }
+            default:
+                break;
+            }    
         }
-        case 3: {
-            st.pop();
-            break;
-        }
-        default:
-            break;
-        }
+        
     }
 
     // PRE ORDER: PADRE -> LEFT -> RIGHT
     void preOrder_s(stack<Item>& st) {
-
-        switch (st.top().state)
-        {
-        case 0: {
-            st.top().state = 1;
-            cout << st.top().p->value << " ";
-            break;
-        }
-        case 1: {
-            st.top().state = 2;
-            if (st.top().p->left != nullptr) {
-                Item i(st.top().p->left, 0);
-                st.push(i);
+        while (st.empty() != 1) { // mientras el stack no este vacio vamos a ir agregando y procesando los nodos
+            switch (st.top().state)
+            {
+            case 0: {
+                st.top().state = 1;
+                cout << st.top().p->value << " ";
+                break;
             }
-            break;
-        }
-        case 2: {
-            st.top().state = 3;
-            if (st.top().p->right != nullptr) {
-                Item i(st.top().p->right, 0);
-                st.push(i);
+            case 1: {
+                st.top().state = 2;
+                if (st.top().p->left != nullptr) {
+                    Item i(st.top().p->left, 0);
+                    st.push(i);
+                }
+                break;
             }
-            break;
+            case 2: {
+                st.top().state = 3;
+                if (st.top().p->right != nullptr) {
+                    Item i(st.top().p->right, 0);
+                    st.push(i);
+                }
+                break;
+            }
+            case 3: {
+                st.pop();
+                break;
+            }
+            default:
+                break;
+            }    
         }
-        case 3: {
-            st.pop();
-            break;
-        }
-        default:
-            break;
-        }
+        
     }
 
     // POST ORDER: LEFT -> RIGHT -> PADRE 
     void postOrder_s(stack<Item>& st) {
-
-        switch (st.top().state)
-        {
-        case 0: {
-            st.top().state = 1;
-            if (st.top().p->left != nullptr) {
-                Item i(st.top().p->left, 0);
-                st.push(i);
+        while (st.empty() != 1) {
+            switch (st.top().state)
+            {
+            case 0: {
+                st.top().state = 1;
+                if (st.top().p->left != nullptr) {
+                    Item i(st.top().p->left, 0);
+                    st.push(i);
+                }
+                break;
             }
-            break;
-        }
-        case 1: {
-            st.top().state = 2;
-            if (st.top().p->right != nullptr) {
-                Item i(st.top().p->right, 0);
-                st.push(i);
+            case 1: {
+                st.top().state = 2;
+                if (st.top().p->right != nullptr) {
+                    Item i(st.top().p->right, 0);
+                    st.push(i);
+                }
+                break;
             }
-            break;
+            case 2: {
+                st.top().state = 3;
+                cout << st.top().p->value << " ";
+                break;
+            }
+            case 3: {
+                st.pop();
+                break;
+            }
+            default:
+                break;
+            }    
         }
-        case 2: {
-            st.top().state = 3;
-            cout << st.top().p->value << " ";
-            break;
-        }
-        case 3: {
-            st.pop();
-            break;
-        }
-        default:
-            break;
-        }
+        
     }
 
     // REVERSE: RIGHT -> PADRE -> LEFT (mayor a menor) 
     void reverse_s(stack<Item>& st) {
+        while (st.empty() != 1) {
+            switch (st.top().state)
+            {
+            case 0: {
+                st.top().state = 1;
+                if (st.top().p->right != nullptr) {
+                    Item i(st.top().p->right, 0);
+                    st.push(i);
+                }
+                break;
+            }
+            case 1: {
+                st.top().state = 2;
+                cout << st.top().p->value << " ";
+                break;
+            }
+            case 2: {
+                st.top().state = 3;
+                if (st.top().p->left != nullptr) {
+                    Item i(st.top().p->left, 0);
+                    st.push(i);
+                }
+                break;
+            }
+            case 3: {
+                st.pop();
+                break;
+            }
+            default:
+                break;
+            }    
+        }
+        
+    }
 
-        switch (st.top().state)
-        {
-        case 0: {
-            st.top().state = 1;
-            if (st.top().p->right != nullptr) {
-                Item i(st.top().p->right, 0);
-                st.push(i);
+    /***RECORRIDO POR NIVELES***/
+    void levels(queue<Node*>& qe) {
+        while (!qe.empty()) {
+            cout << qe.front()->value << " ";  // imprimimos el valor del nodo al inicio (niveles superiores)
+            
+            // Agregamos los nodos hijos (niveles inferiores)
+            if (qe.front()->left != nullptr) {
+                qe.push(qe.front()->left);
             }
-            break;
-        }
-        case 1: {
-            st.top().state = 2;
-            cout << st.top().p->value << " ";
-            break;
-        }
-        case 2: {
-            st.top().state = 3;
-            if (st.top().p->left != nullptr) {
-                Item i(st.top().p->left, 0);
-                st.push(i);
+            if (qe.front()->right != nullptr) {
+               qe.push(qe.front()->right); 
             }
-            break;
-        }
-        case 3: {
-            st.pop();
-            break;
-        }
-        default:
-            break;
+
+            qe.pop(); // terminamos de procesar nodo padre asi que lo desapilamos 
         }
     }
 };
@@ -343,7 +370,7 @@ int main() {
     cout << "\nRECORRIDO REVERSE: ";
     tree.reverse(tree.getRoot());*/
 
-    // TEST - USANDO ESTADOS
+    // TEST 2 - ITERATIVO (USANDO ESTADOS)
     stack<Item> st; // stack de items para almacenar nodos y estados
 
     tree.insert(52);
@@ -357,28 +384,27 @@ int main() {
     Item i(tree.getRoot(), 0);
     
     st.push(i);
+    
     cout << "IN ORDER S: ";
-    while (st.empty() != 1) {
-        tree.inOrder_s(st);
-    }
+    tree.inOrder_s(st);
 
     st.push(i);
     cout << "\nPRE ORDER S: ";
-    while (st.empty() != 1) {
-        tree.preOrder_s(st);
-    }
+    tree.preOrder_s(st);
      
     st.push(i);
     cout << "\nPOST ORDER S: ";
-    while (st.empty() != 1) {
-        tree.postOrder_s(st);
-    }
+    tree.postOrder_s(st);
 
     st.push(i);
     cout << "\nREVERSE S: ";
-    while (st.empty() != 1) {
-        tree.reverse_s(st);
-    }
+    tree.reverse_s(st);
+    
+    // TEST 3: POR NIVELES 
+    queue<Node*> qe; // cola para guardar los nodos y procesar los niveles
+    qe.push(tree.getRoot()); // ponemos la raiz en la cola
+    cout << "\nPOR NIVELES :";
+    tree.levels(qe);
 
 
     return 0;
