@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stack>
 using namespace std;
 
 struct Node {
@@ -11,7 +12,15 @@ struct Node {
         left = right = nullptr;
     }
 };
+struct Item { // esta estructura nos ayudará a almacenar nodos y estados es un version diferente de los recorridos
+    Node* p;   // puntero a un nodo para no perderlo de vista 
+    int state; // estado del nodo para saber como seguir con el recorrido
 
+    Item(Node* q, int s) {
+        p = q;
+        state = s;
+    }
+};
 class CBinaryTree {
 private:
     Node* root;   // puntero raiz
@@ -125,6 +134,7 @@ public:
         return root;
     }
 
+    /***RECORRIDOS CON RECURSIVIDAD***/
     // IN ORDER: LEFT -> PADRE -> RIGHT (menor a mayor)
     void inOrder(Node* p) {
         if (p == nullptr) {
@@ -164,13 +174,155 @@ public:
         cout << p->value << " ";
         reverse(p->left);
     }
+
+    /***RECORRIDOS CON ESTADO***/
+    // IN ORDER: LEFT -> PADRE -> RIGHT (menor a mayor)
+    void inOrder_s(stack<Item>& st) {
+
+        switch (st.top().state)
+        {
+        case 0: {
+            st.top().state = 1;
+            if (st.top().p->left != nullptr) {
+                Item i(st.top().p->left, 0);
+                st.push(i);
+            }
+            break;
+        }
+        case 1: {
+            st.top().state = 2;
+            cout << st.top().p->value << " ";
+            break;
+        }
+        case 2: {
+            st.top().state = 3;
+            if (st.top().p->right != nullptr) {
+                Item i(st.top().p->right, 0);
+                st.push(i);
+            }
+            break;
+        }
+        case 3: {
+            st.pop();
+            break;
+        }
+        default:
+            break;
+        }
+    }
+
+    // PRE ORDER: PADRE -> LEFT -> RIGHT
+    void preOrder_s(stack<Item>& st) {
+
+        switch (st.top().state)
+        {
+        case 0: {
+            st.top().state = 1;
+            cout << st.top().p->value << " ";
+            break;
+        }
+        case 1: {
+            st.top().state = 2;
+            if (st.top().p->left != nullptr) {
+                Item i(st.top().p->left, 0);
+                st.push(i);
+            }
+            break;
+        }
+        case 2: {
+            st.top().state = 3;
+            if (st.top().p->right != nullptr) {
+                Item i(st.top().p->right, 0);
+                st.push(i);
+            }
+            break;
+        }
+        case 3: {
+            st.pop();
+            break;
+        }
+        default:
+            break;
+        }
+    }
+
+    // POST ORDER: LEFT -> RIGHT -> PADRE 
+    void postOrder_s(stack<Item>& st) {
+
+        switch (st.top().state)
+        {
+        case 0: {
+            st.top().state = 1;
+            if (st.top().p->left != nullptr) {
+                Item i(st.top().p->left, 0);
+                st.push(i);
+            }
+            break;
+        }
+        case 1: {
+            st.top().state = 2;
+            if (st.top().p->right != nullptr) {
+                Item i(st.top().p->right, 0);
+                st.push(i);
+            }
+            break;
+        }
+        case 2: {
+            st.top().state = 3;
+            cout << st.top().p->value << " ";
+            break;
+        }
+        case 3: {
+            st.pop();
+            break;
+        }
+        default:
+            break;
+        }
+    }
+
+    // REVERSE: RIGHT -> PADRE -> LEFT (mayor a menor) 
+    void reverse_s(stack<Item>& st) {
+
+        switch (st.top().state)
+        {
+        case 0: {
+            st.top().state = 1;
+            if (st.top().p->right != nullptr) {
+                Item i(st.top().p->right, 0);
+                st.push(i);
+            }
+            break;
+        }
+        case 1: {
+            st.top().state = 2;
+            cout << st.top().p->value << " ";
+            break;
+        }
+        case 2: {
+            st.top().state = 3;
+            if (st.top().p->left != nullptr) {
+                Item i(st.top().p->left, 0);
+                st.push(i);
+            }
+            break;
+        }
+        case 3: {
+            st.pop();
+            break;
+        }
+        default:
+            break;
+        }
+    }
 };
 
 int main() {
     CBinaryTree tree;
     Node** p; 
 
-    tree.insert(52);
+    // TEST 1 - RECURSIVIDAD
+    /*tree.insert(52);
     tree.insert(43);
     tree.insert(73);
     tree.insert(31);
@@ -189,6 +341,45 @@ int main() {
     cout << "\nRECORRIDO POST ORDER: ";
     tree.postOrder(tree.getRoot());
     cout << "\nRECORRIDO REVERSE: ";
-    tree.reverse(tree.getRoot());
+    tree.reverse(tree.getRoot());*/
+
+    // TEST - USANDO ESTADOS
+    stack<Item> st; // stack de items para almacenar nodos y estados
+
+    tree.insert(52);
+    tree.insert(43);
+    tree.insert(73);
+    tree.insert(31);
+    tree.insert(47);
+    tree.insert(61);
+    tree.insert(84);
+
+    Item i(tree.getRoot(), 0);
+    
+    st.push(i);
+    cout << "IN ORDER S: ";
+    while (st.empty() != 1) {
+        tree.inOrder_s(st);
+    }
+
+    st.push(i);
+    cout << "\nPRE ORDER S: ";
+    while (st.empty() != 1) {
+        tree.preOrder_s(st);
+    }
+     
+    st.push(i);
+    cout << "\nPOST ORDER S: ";
+    while (st.empty() != 1) {
+        tree.postOrder_s(st);
+    }
+
+    st.push(i);
+    cout << "\nREVERSE S: ";
+    while (st.empty() != 1) {
+        tree.reverse_s(st);
+    }
+
+
     return 0;
 }
