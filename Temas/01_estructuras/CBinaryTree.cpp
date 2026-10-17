@@ -342,6 +342,24 @@ public:
             qe.pop(); // terminamos de procesar nodo padre asi que lo desapilamos 
         }
     }
+
+    int maxH(Node* p) {
+        if (p == nullptr) { // si p apunta a nullptr es xq no hay ningún nodo y la altura es 0
+            return 0;
+        }
+        else {
+
+            // Alturas de los nodos hijos (izquierdo y derecho)
+            int leftH;
+            int rightH;
+
+            // Calculamos la altura de los hijos
+            leftH = maxH(p->left);
+            rightH = maxH(p->right);
+
+            return max(leftH,rightH) + 1; // retornamos la altura del padre que es una más(o una menos) que de sus hijos
+        }
+    }
 };
 
 int main() {
@@ -406,6 +424,7 @@ int main() {
     cout << "\nPOR NIVELES :";
     tree.levels(qe);
 
+    cout << "Altura del arbol: " << tree.maxH(tree.getRoot()) << endl;
 
     return 0;
 }
