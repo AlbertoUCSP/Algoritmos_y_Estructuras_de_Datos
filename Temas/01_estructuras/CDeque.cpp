@@ -31,28 +31,37 @@ public:
     }
 
     void expand() {
-        int newSize = map_size * 2;
-        int** newMap = new int*[newSize]; // creamos un nuevo mapa con el doble de tamaño
+        int newSize = map_size * 2;            // doblamos el tamaño del mapa anterior
+        int** newMap = new int*[newSize];      // creamos un nuevo mapa con el doble de tamaño
+        
+        int nChunks = (fin_map - ini_map) + 1; // número de chunks ocupados del mapa viejo
         
         // inicio y fin del nuevo mapa
-        int** new_ini_map;
-        int** new_fin_map;
+        int** new_ini_map = newMap + (newSize / 2) - (nChunks / 2);
+        int** new_fin_map = new_ini_map + (nChunks - 1);
 
-        // variables de apoyo para copiar los elementos
-        int** centro = map + (map_size / 2); // puntero al centro del map original
-        int offset = 0;                      // offset para ir moviendome entre los chunks del mapa original
+        // variables de apoyo para copiar los elementos 
+        int** p = ini_map;     // para recorrer el mapa viejo;
+        int** q = new_ini_map; // para recorrer el mapa nuevo;
 
-        // inicializamos los nuevos punteros
-        new_ini_map = new_fin_map = newMap + (newSize / 2);
+        // Copiamos las direcciones de los chunks del mapa viejo al mapa nuevo
+        while (p <= fin_map) {
+            *q = *p;
+            p++;
+            q++;
+        }
 
-        // copiando los elementos
-        while (ini_map <= fin_map) {
-            *new_ini_map = *(centro - offset);
-            new_ini_map--;
-            offset++;
-            new_fin_map++;
-            *new_fin_map = *centro + offset;
-        }     
+        int** tmp = map; // puntero para guardar la dirección del mapa viejo y liberarla después
+
+        // Actualizando las variables originales
+        map = newMap;
+        ini_map = new_ini_map;
+        fin_map = new_fin_map;
+        map_size = newSize;
+
+        // NOTA: INI_ELEM Y FIN_ELEM NO SE ACTUALIZAN YA QUE NO HEMOS MODIFICADO NADA DE LOS CHUNKS
+
+        delete[] tmp;   // liberamos el mapa viejo
     }
 
     // collapse PENDIENTE
