@@ -1,235 +1,162 @@
 #include <iostream>
 using namespace std;
 
-class CVector {
-private:
-    int* vector;  // puntero al vector
-    int size;     // tamaño real del vector
-    int elem = 0; // número inicial de elementos
+struct Node {
+    int value;
+    Node* next;
 
-public:
-    CVector (int _size) {
-        if (_size <= 0) {
-            _size = 1;
-        }
-        size = _size;
-        vector = new int[size];
+    Node(int x) {
+        value = x;
+        next = nullptr;
     }
-
-    ~CVector() {
-        delete[] vector;
-    }
-
-    bool isEmpty() {
-        if (elem == 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    bool isFull() {
-        if (elem == size) {
-            return 1;
-        }
-        else {
-            return 0;
-        }
-    }
-
-    void expand() {
-        int* newVector = new int[size*2]; // newVector no es otro vector como tal, es un puntero a un nuevo bloque de memoria, como un puntero temporal 
-        for (int i{0}; i < elem; i++) {
-            newVector[i] = vector[i];
-        }
-        delete[] vector;    // liberamos la memoria vieja
-        vector = newVector; // actualizamos vector para que apunte a la nueva memoria redimensionada
-        size *= 2;
-    }
-
-    void collapse() {
-        if (size <= 1) { // evitamos que collapse reduzca size a 0
-            return;
-        }
-
-        int* newVector = new int[size / 2]; // creamos un nuevo bloque de memoria con menor tamaño
-        for (int i{0}; i < elem; i++) {
-            newVector[i] = vector[i];       // copiamos los elementos al nuevo bloque
-        }
-        delete[] vector;    // liberamos memoria vieja
-        vector = newVector; // actualizamos la memoria
-        size /= 2;          
-    }
-
-    void push_back(int n) {
-        if (elem == size) {
-            expand();
-        }
-        vector[elem] = n;
-        elem++;
-    }
-
-    void push_front(int n) {
-        if (elem == size) {
-            expand();
-        }
-
-        int* libre = vector + elem; // calculamos el primer espacio disponible
-        while (libre != vector) {   // recorremos desde atrás usando el puntero libre
-            *libre = *(libre - 1);  // copiamos los elementos
-            libre--;
-        }
-        vector[0] = n; // *libre = n;
-        elem++;
-    }
-
-    void push_front2(int n) {
-        if (elem == size) {
-            expand();
-        }
-        for (int i{elem}; i > 0; i--) { // empezamos directamente en la última posición disponible
-            vector[i] = vector[i - 1];  // vamos copiando de atrás hacia adelante 
-        }
-        vector[0] = n;
-        elem++;
-    }
-
-    void pop_back() { 
-        if (elem == 0) {
-            cout << "Eliminacion invalida, vector vacio" << endl;
-        }
-        else {
-            if (elem <= size / 2) {
-                collapse();
-            }
-            elem--;
-        }
-    }
-
-    void pop_front() {
-        if (elem == 0) {
-            cout << "Eliminacion invalida, vector vacio" << endl;
-        }
-        else {
-            if (elem <= size / 2) {
-                collapse();
-            }
-            for (int i{0}; i < elem - 1; i++) {
-                vector[i] = vector[i + 1];
-            }
-            elem--;
-        }
-    }
-
-    int front() {
-        if (elem == 0) {
-            cout << "Vector vacio" << endl;
-            return 0;
-        }
-        else {
-            return vector[0];
-        }
-        
-    }
-
-    int back() {
-        if (elem == 0) {
-            cout << "Vector vacio" << endl;
-            return 0;
-        }
-        else {
-            return vector[elem - 1];
-        }
-        
-    }
-
-    int& operator[](int i) {
-        return vector[i]; // -> *(vector + i)
-    }
-
-    int getElem() {
-        return elem;
-    }
-
-    void print() {
-        cout << "[ ";
-        for (int i{0}; i < elem; i++) {
-            cout << vector[i] << " ";
-        }
-        cout << "]" << endl;
-    }
-
 };
-
-class CQueue { // FIFO: First In First Out
+class CQueue {
 private:
-    CVector vector; // usaremos un contenedor de tipo CVector que se encargará del manejo de las operaciones de la Queue
+    int nelem;
+    Node* front;
+    Node* back;
 
 public:
-    CQueue(int size) : vector(size) {}
-
-    bool empty() {
-        return vector.isEmpty();
+    CQueue() {
+        nelem = 0;
+        front = back = nullptr;
     }
 
-    int getElem() {
-        return vector.getElem();
+    ~CQueue() {
+        Node* tmp = front;
+        while (front != nullptr) {
+            front = front->next;
+            delete tmp;
+            tmp = front;
+        }
     }
 
     void push(int x) {
-        vector.push_back(x);
+        if (back == nullptr) {
+            Node* new_node = new Node(x);
+            front = back = new_node;
+        }
+        else {
+            Node* new_node = new Node(x);
+            back->next = new_node;
+            back = back->next;
+        }
+        nelem++;
     }
 
     void pop() {
-        vector.pop_front();
+        if (front == nullptr) {
+            return;
+        }
+        else {
+            Node* tmp = front;
+            front = front->next;
+            delete tmp;
+        }
+        nelem--;
     }
 
-    int front() {
-        return vector.front();
+    int front_() {
+        return front->value;
     }
 
-    int back() {
-        return vector.back();
+    int back_() {
+        return back->value;
     }
 
     void print() {
-        vector.print();
+        Node* p = front;
+        for (; p != nullptr; p = p->next) {
+            cout << p->value << "->";
+        }
+        cout << "NULL" << endl;
     }
 };
 
 
+#include <iostream>
+using namespace std;
+
+void run_test(const string& nombre, const string& esperado, CQueue& cola) {
+    cout << "\n===== " << nombre << " =====" << endl;
+    cout << "Resultado esperado: " << esperado << endl;
+    cout << "Resultado obtenido: ";
+    cola.print();
+}
+
 int main() {
-    CQueue queue(3);
-    queue.print();
+    // TEST 1: Cola vacia
+    {
+        CQueue cola;
+        run_test("TEST 1: Cola vacia", "NULL", cola);
+        cola.pop();
+        run_test("Pop en cola vacia", "NULL", cola);
+    }
 
-    cout << "Agregando elementos..." << endl;
-    queue.push(1);
-    queue.push(2);
-    queue.push(3);
-    queue.push(4);
-    queue.push(5);
-    queue.print();
-    
-    cout << "Elementos: " << queue.getElem() << endl;
-    cout << "Front: " << queue.front() << "\nBack: " << queue.back() << endl;
+    // TEST 2: Insertar varios elementos
+    {
+        CQueue cola;
+        cola.push(10);
+        cola.push(20);
+        cola.push(30);
 
-    cout << "Elimiando elementos..." << endl;
-    queue.pop();
-    queue.pop();
-    queue.print();
+        run_test("TEST 2: Push", "10->20->30->NULL", cola);
+        cout << "Front esperado: 10 | Obtenido: " << cola.front_() << endl;
+        cout << "Back esperado: 30 | Obtenido: " << cola.back_() << endl;
+    }
 
-    cout << "Elementos: " << queue.getElem() << endl;
-    cout << "Front: " << queue.front() << "\nBack: " << queue.back() << endl;
+    // TEST 3: Eliminar un elemento
+    {
+        CQueue cola;
+        cola.push(10);
+        cola.push(20);
+        cola.push(30);
+        cola.pop();
 
-    cout << "Eliminado todos lo elementos..." << endl;
-    queue.pop();
-    queue.pop();
-    queue.pop();
-    queue.print();
+        run_test("TEST 3: Pop", "20->30->NULL", cola);
+        cout << "Front esperado: 20 | Obtenido: " << cola.front_() << endl;
+        cout << "Back esperado: 30 | Obtenido: " << cola.back_() << endl;
+    }
 
-    cout << "Elementos: " << queue.getElem() << endl;
-    cout << "Front: " << queue.front() << "\nBack: " << queue.back() << endl;
+    // TEST 4: Dejar un solo elemento
+    {
+        CQueue cola;
+        cola.push(10);
+        cola.push(20);
+        cola.pop();
+
+        run_test("TEST 4: Un elemento", "20->NULL", cola);
+        cout << "Front esperado: 20 | Obtenido: " << cola.front_() << endl;
+        cout << "Back esperado: 20 | Obtenido: " << cola.back_() << endl;
+    }
+
+    // TEST 5: Vaciar completamente la cola
+    {
+        CQueue cola;
+        cola.push(10);
+        cola.push(20);
+        cola.pop();
+        cola.pop();
+        cola.pop();
+
+        run_test("TEST 5: Cola vaciada", "NULL", cola);
+    }
+
+    // TEST 6: Reutilizar la cola
+    {
+        CQueue cola;
+        cola.push(10);
+        cola.push(20);
+        cola.pop();
+        cola.pop();
+
+        cola.push(100);
+        cola.push(200);
+
+        run_test("TEST 6: Reutilizacion", "100->200->NULL", cola);
+        cout << "Front esperado: 100 | Obtenido: " << cola.front_() << endl;
+        cout << "Back esperado: 200 | Obtenido: " << cola.back_() << endl;
+    }
 
     return 0;
 }
