@@ -21,14 +21,22 @@ private:
     // isLeftBorder: el nodo pertenece a la frontera izquierda
     // isRightBorder: el nodo pertenece a la frontera derecha
     void printNonPerimeter(Node* node, bool isLeftBorder, bool isRightBorder) {
+        if (node == nullptr) {
+        return;
+    }
 
-        // =====================================================
-        // COMPLETE EL CODIGO AQUI
-        // =====================================================
+    bool isLeaf = (node->left == nullptr && node->right == nullptr);
 
+    // Recorrer el hijo izquierdo
+    printNonPerimeter(node->left, isLeftBorder && node->left != nullptr, isRightBorder && node->right == nullptr);
 
+    // Imprimir solo los nodos interiores
+    if (!isLeftBorder && !isRightBorder && !isLeaf) {
+        cout << node->data << " ";
+    }
 
-        // =====================================================
+    // Recorrer el hijo derecho
+    printNonPerimeter(node->right, isLeftBorder && node->left == nullptr, isRightBorder && node->right != nullptr);
     }
 
 public:
