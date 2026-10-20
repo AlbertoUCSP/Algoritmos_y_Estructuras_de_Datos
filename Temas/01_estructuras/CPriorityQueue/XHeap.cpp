@@ -9,10 +9,12 @@ struct Node {
     int value;
     Node* left;
     Node* right;
+    Node* parent;
 
     Node(int v) {
         value = v;
-        left = right = nullptr;
+        parent = left = right = nullptr;
+        
     }
 };
 
@@ -45,7 +47,9 @@ public:
     }
 
     // Find buscará el siguiente lugar de inserción siguiente el criterio del Heap
-    void find() {
+    Node** find_by_levels() {
+        Node** p = &root;
+
         if (empty() == 1) {
             return;
         }
@@ -56,35 +60,35 @@ public:
 
             // Recorremos mientras la cola no este vacía
             while (!qn.empty()) {
-                if (qn.front()->left == nullptr) { // si left es nullptr insertamos en esa posición
-                    // agrego nodo
-                }
-                else { // si no, agregamos el hijo izquiero a la cola y eliminamos el padre
+
+                // Hijo izquierdo
+                if (qn.front()->left != nullptr) {
                     qn.push(qn.front()->left);
-                    qn.pop();
-                }
-                if (qn.front()->right == nullptr) {
-                    // agrego nodo
                 }
                 else {
-                    qn.push(qn.front()->right);
-                    qn.pop();
+                    p = &(qn.front()->left);
+                    break;
                 }
-            }
-            
-        }
-        
 
+                // Hijo derecho
+                if (qn.front()->right != nullptr) {
+                    qn.push(qn.front()->right);
+                }
+                else {
+                    p = &(qn.front()->right);
+                    break;
+                }
+
+                qn.pop();
+            }   
+        }
+        return p; // retornamos el puntero que señala el lugar de iserción
     }
 
-    void insert(int x) {
-        if (root == nullptr) {
-            Node* new_node = new Node(x);
-            root = new_node;
-        }
-        else {
+    void push(int x) {
+        Node** p = find_by_levels();
 
-        }
+        *p = new Node(x);
     }
 };
 
