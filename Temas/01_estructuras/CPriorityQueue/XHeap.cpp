@@ -18,6 +18,17 @@ struct Node {
     }
 };
 
+struct Less {
+    bool operator()(int a, int b) {
+        return a < b;
+    }
+};
+
+struct Greater {
+    bool operator()(int a, int b) {
+        return a > b;
+    }
+};
 class XHeap {
 private:
     Node* root;
@@ -47,7 +58,7 @@ public:
     }
 
     // Find buscará el siguiente lugar de inserción siguiente el criterio del Heap
-    Node** insertion_place() {
+    Node** insertion_place(Node*& q) {
         Node** p = &root;
 
         if (empty() == 1) {
@@ -64,8 +75,10 @@ public:
                 // Hijo izquierdo
                 if (qn.front()->left != nullptr) {
                     qn.push(qn.front()->left);
+
                 }
                 else {
+                    q = qn.front();
                     p = &(qn.front()->left);
                     break;
                 }
@@ -75,6 +88,7 @@ public:
                     qn.push(qn.front()->right);
                 }
                 else {
+                    q = qn.front();
                     p = &(qn.front()->right);
                     break;
                 }
@@ -86,25 +100,31 @@ public:
     }
 
     void sift_up(Node* p) {
-        // p apunta al nodo insertado
-        // comparo p->value con p->parent->value
-        // dependiendo del criteio se hace un swap o no
-        // repetimos el proceso hasta que el heap cumpla su propiedad
+        Less ls;
+
+        while (p->parent != nullptr) { // recorremos hacia arriba mientras no lleguemos a la raiz
+            // Si el criterio no se cumple, lo arreglamos intercambiando los valores del padre y el hijo
+            if (ls(p->value, p->parent->value)) { 
+                swap(p->value, p->parent->value);    
+                p = p->parent; // subimos al padre para seguir comparando 
+            }
+            // Terminamos una vez el heap quede ordenado según si criterio
+            else {
+                break;
+            }        
+        }
     }
 
     void push(int x) {
-        Node** p = insertion_place();
-        Node* q = *p;
-
-        if (*p == nullptr) {
-            *p = new Node(x);
-            (*p)->parent = nullptr;
-        }
-        else {
-            *p = new Node(x);
-
-        }
+        Node* q = nullptr; // inicializamos q con null para manejar el caso de un árbol vacio y asi root->parent sera nullptr
+        Node** p = insertion_place(q);
+        
         *p = new Node(x);
+        (*p)->parent = q;
+
+        sift_up(*p);
+
+        nelem++;
     }
 };
 
