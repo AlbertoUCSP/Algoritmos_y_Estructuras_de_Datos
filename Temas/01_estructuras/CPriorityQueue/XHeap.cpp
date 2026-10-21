@@ -47,11 +47,11 @@ public:
     }
 
     // Find buscará el siguiente lugar de inserción siguiente el criterio del Heap
-    Node** find_by_levels() {
+    Node** insertion_place() {
         Node** p = &root;
 
         if (empty() == 1) {
-            return;
+            return p;
         }
         else {
             // Creamos una cola para hacer un recorrido por niveles
@@ -85,9 +85,25 @@ public:
         return p; // retornamos el puntero que señala el lugar de iserción
     }
 
-    void push(int x) {
-        Node** p = find_by_levels();
+    void sift_up(Node* p) {
+        // p apunta al nodo insertado
+        // comparo p->value con p->parent->value
+        // dependiendo del criteio se hace un swap o no
+        // repetimos el proceso hasta que el heap cumpla su propiedad
+    }
 
+    void push(int x) {
+        Node** p = insertion_place();
+        Node* q = *p;
+
+        if (*p == nullptr) {
+            *p = new Node(x);
+            (*p)->parent = nullptr;
+        }
+        else {
+            *p = new Node(x);
+
+        }
         *p = new Node(x);
     }
 };
