@@ -9,7 +9,7 @@ struct Node {
     int value;
     Node* left;
     Node* right;
-    Node* parent;
+    Node* parent; // puntero al padre de un nodo, ayudará a reorganizar el heap según el criterio
 
     Node(int v) {
         value = v;
@@ -18,17 +18,20 @@ struct Node {
     }
 };
 
+// FUNCTOR PARA MIN HEAP
 struct Less {
     bool operator()(int a, int b) {
         return a < b;
     }
 };
 
+// FUNCTOR PARA MAX HEAP
 struct Greater {
     bool operator()(int a, int b) {
         return a > b;
     }
 };
+
 class XHeap {
 private:
     Node* root;
@@ -78,7 +81,7 @@ public:
 
                 }
                 else {
-                    q = qn.front();
+                    q = qn.front(); // puntero al padre del hijo izquierdo 
                     p = &(qn.front()->left);
                     break;
                 }
@@ -88,7 +91,7 @@ public:
                     qn.push(qn.front()->right);
                 }
                 else {
-                    q = qn.front();
+                    q = qn.front(); // puntero al padre del hijo derecho
                     p = &(qn.front()->right);
                     break;
                 }
@@ -99,8 +102,9 @@ public:
         return p; // retornamos el puntero que señala el lugar de iserción
     }
 
+    // Funcion para reorganizar el heap despúes de una INSERCIÓN
     void sift_up(Node* p) {
-        Less ls;
+        Less ls; // criterio del heap
 
         while (p->parent != nullptr) { // recorremos hacia arriba mientras no lleguemos a la raiz
             // Si el criterio no se cumple, lo arreglamos intercambiando los valores del padre y el hijo
@@ -122,9 +126,59 @@ public:
         *p = new Node(x);
         (*p)->parent = q;
 
-        sift_up(*p);
+        sift_up(*p); // colocamos el nodo insertado en su lugar
 
         nelem++;
+    }
+
+    void sift_down(Node* p) {
+        Less ls;
+        Node* q;
+
+        while (p != nullptr) {
+
+            // Padre sin hijos, terminamos 
+            if (p->left == nullptr && p->right == nullptr) {
+                break;
+            }
+
+            // Padre con un hijo
+            if (p->left == nullptr) {
+                q = p->right;
+            }
+            else if (p->right == nullptr) {
+                q = p->left;
+            }
+            // Padre con ambos hijos, los comparamos y dejamos q apuntando al menor
+            else if (ls(p->left->value, p->right->value)) {
+                q = p->left;
+            }
+            else {
+                q = p->right;
+            }
+
+            // Comparo el menor hijo con el padre
+            if (ls(q->value, p->value)) {
+                swap(q->value, p->value);
+                p = q;
+            }
+            else {
+                break;
+            }
+        }
+    }
+
+    void pop() {
+        if (empty()) {
+            return;
+        }
+        else if (nelem == 1) {
+            delete root;
+        }
+        else {
+
+        }
+        nelem--;
     }
 };
 
