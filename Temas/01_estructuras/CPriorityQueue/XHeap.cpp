@@ -102,6 +102,28 @@ public:
         return p; // retornamos el puntero que señala el lugar de iserción
     }
 
+    Node** find_last(Node*& q) {
+        Node** p = &root;
+        if (empty()) {
+            cout << "Heap vacio" << endl;
+            return;
+        }
+        else {
+            queue<Node*> qn;
+            qn.push(*p);
+
+            while (qn.empty() != 1) {
+
+                // Hijo izquierdo
+                if (qn.front()->left != nullptr) {
+                    qn.push(qn.front()->left);
+                }
+            }
+        }
+
+
+    }
+
     // Funcion para reorganizar el heap despúes de una INSERCIÓN
     void sift_up(Node* p) {
         Less ls; // criterio del heap
@@ -170,10 +192,12 @@ public:
 
     void pop() {
         if (empty()) {
+            cout << "Heap vacio, eliminacion invalida" << endl;
             return;
         }
         else if (nelem == 1) {
             delete root;
+            root = nullptr;
         }
         else {
 
