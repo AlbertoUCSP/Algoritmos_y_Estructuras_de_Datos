@@ -42,6 +42,7 @@ public:
         nelem = 0;
     }
 
+    /***NIVEL DE ABSTRACCIÓN 0***/
     // Busqueda horizontal
     bool find_x(int x, int y, SNode**& px) { // recibe como parametros ambas coordenadas y un puntero como referencia para señalar donde está el nodo
         px = coord_x + (x - 1);  
@@ -64,7 +65,42 @@ public:
         return *py != nullptr && (*py)->x == x;
     }
 
-    
+    bool insert(int x, int y, int v) {
+
+        //Punteros dobles para la busqueda
+        SNode** px;
+        SNode** py;
+
+        // Si un nodo ya existe en esa posición solo actualizamos su valor
+        if (find_x(x,y,px)) {
+            (*px)->value = v;
+            return true;
+        }
+        else {
+            find_y(y,x,py);
+
+            // Guardamos el nodo anterior para reconectarlo despues 
+            SNode* tmp_x = *px; 
+            SNode* tmp_y = *py;
+
+            (*px) = new SNode(x,y,v); // creación del nuevo nodo
+            
+            *py = *px;
+
+            // Reorganizamos las conexiones
+            (*px)->next = tmp_x;
+            (*py)->down = tmp_y;
+            
+            nelem++;
+            
+            return true;
+
+        }
+    }
+
+    bool remove(int x, int y) {
+
+    }
 
 };
 
