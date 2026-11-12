@@ -100,6 +100,26 @@ public:
 
     bool remove(int x, int y) {
 
+        //Punteros para las busquedas
+        SNode** px;
+        SNode** py;
+
+        // Si el nodo en esa coordenada no existe, no se hace nada 
+        if (!find_x(x,y,px)) {
+            return 0;
+        }
+        else {
+            find_y(y,x,py);
+
+            SNode* tmp = *px;
+
+            *px = (*px)->next;
+            *py = (*py)->down;
+
+            delete tmp;
+            nelem--;
+            return 1;
+        }
     }
 
 };
