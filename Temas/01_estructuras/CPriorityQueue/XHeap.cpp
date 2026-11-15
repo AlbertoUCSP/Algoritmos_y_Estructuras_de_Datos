@@ -60,9 +60,9 @@ public:
         }
     }
 
-    // Find buscará el siguiente lugar de inserción siguiente el criterio del Heap
+    // Buscará el siguiente lugar de inserción siguiendo el criterio del Heap
     Node** insertion_place(Node*& q) {
-        Node** p = &root;
+        Node** p = &root; // empezamos la busqueda desde la raíz
 
         if (empty() == 1) {
             return p;
@@ -78,7 +78,6 @@ public:
                 // Hijo izquierdo
                 if (qn.front()->left != nullptr) {
                     qn.push(qn.front()->left);
-
                 }
                 else {
                     q = qn.front(); // puntero al padre del hijo izquierdo 
@@ -102,33 +101,43 @@ public:
         return p; // retornamos el puntero que señala el lugar de iserción
     }
 
-    Node** find_last(Node*& q) {
-        Node** p = &root;
-        if (empty()) {
-            cout << "Heap vacio" << endl;
-            return;
-        }
-        else {
-            queue<Node*> qn;
-            qn.push(*p);
+    Node* find_last() {
+        Node* p; // p apuntará al último nodo
 
-            while (qn.empty() != 1) {
+        if (empty()) {
+            return nullptr;
+        }
+
+        else {
+            queue<Node*> qn; // cola para el recorrido por niveles
+            qn.push(root);      // agregamos la raíz a la cola
+
+            while (!qn.empty()) { // procesamos hasta que la cola quede vacía
+
+                p = qn.front();   // p apunta al primer nodo de la cola 
 
                 // Hijo izquierdo
-                if (qn.front()->left != nullptr) {
-                    qn.push(qn.front()->left);
+                if (p->left != nullptr) {
+                    qn.push(p->left);
                 }
+
+                // Hijo derecho
+                if (p->right != nullptr) {
+                    qn.push(p->right);
+                }
+                    
+                qn.pop();
             }
+            return p;
         }
-
-
     }
 
     // Funcion para reorganizar el heap despúes de una INSERCIÓN
     void sift_up(Node* p) {
         Less ls; // criterio del heap
 
-        while (p->parent != nullptr) { // recorremos hacia arriba mientras no lleguemos a la raiz
+        while (p->parent != nullptr) { // recorremos hacia arriba hasta llegar a la raiz
+            
             // Si el criterio no se cumple, lo arreglamos intercambiando los valores del padre y el hijo
             if (ls(p->value, p->parent->value)) { 
                 swap(p->value, p->parent->value);    
@@ -143,10 +152,10 @@ public:
 
     void push(int x) {
         Node* q = nullptr; // inicializamos q con null para manejar el caso de un árbol vacio y asi root->parent sera nullptr
-        Node** p = insertion_place(q);
+        Node** p = insertion_place(q); // q apunta al padre del nuevo nodo, que ayudará a establecer la relación en la inserción
         
-        *p = new Node(x);
-        (*p)->parent = q;
+        *p = new Node(x); // creamos el nuevo nodo
+        (*p)->parent = q; // lo conectamos a su padre
 
         sift_up(*p); // colocamos el nodo insertado en su lugar
 
@@ -155,11 +164,11 @@ public:
 
     void sift_down(Node* p) {
         Less ls;
-        Node* q;
+        Node* q; // apuntará al hijo que debemos comparar con el padre
 
         while (p != nullptr) {
 
-            // Padre sin hijos, terminamos 
+            // Padre sin hijos, llegamos al fondo del heap por lo tanto no hay nada mas que comparar y terminamos 
             if (p->left == nullptr && p->right == nullptr) {
                 break;
             }
@@ -191,13 +200,14 @@ public:
     }
 
     void pop() {
-        if (empty()) {
+        if (empty()) { // heap vacío
             cout << "Heap vacio, eliminacion invalida" << endl;
             return;
         }
-        else if (nelem == 1) {
+        else if (root->left == nullptr && root->right == nullptr) { // heap con un solo elemento
             delete root;
             root = nullptr;
+            nelem--;
         }
         else {
 
