@@ -43,8 +43,21 @@ public:
         nelem = 0;
     }
 
-    ~XHeap() { // PENDIENTE
+    void destroy(Node* p) {
+        if (p == nullptr) {
+            return;
+        }
+        else {
+            destroy(p->left);
+            destroy(p->right);
+            
+            delete p;
+        }
+    }
 
+    ~XHeap() { // PENDIENTE
+        destroy(root);
+        root = nullptr;
     }
 
     bool empty() {
@@ -207,17 +220,26 @@ public:
         else if (root->left == nullptr && root->right == nullptr) { // heap con un solo elemento
             delete root;
             root = nullptr;
-            nelem--;
         }
         else {
-
+            Node* last = find_last();
+            swap(root->value, last->value);
+            
+            if (last->parent->left == last) {
+                last->parent->left = nullptr;
+                delete last;
+            }
+            else {
+                last->parent->right = nullptr;
+                delete last;
+            }
+            sift_down(root);
         }
         nelem--;
     }
 };
 
 int main() {
-
 
     return 0;
 }
