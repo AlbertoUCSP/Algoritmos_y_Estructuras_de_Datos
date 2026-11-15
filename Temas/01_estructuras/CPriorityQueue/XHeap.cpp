@@ -55,7 +55,7 @@ public:
         }
     }
 
-    ~XHeap() { // PENDIENTE
+    ~XHeap() {
         destroy(root);
         root = nullptr;
     }
