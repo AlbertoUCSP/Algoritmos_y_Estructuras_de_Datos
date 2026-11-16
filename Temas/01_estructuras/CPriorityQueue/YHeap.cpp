@@ -47,8 +47,8 @@ public:
     }
 
     void push(int n) {
-        heap.push_back(n);
-        // reorganizar heap con criterio de sift up
+        heap.push_back(n); // agregar el elemento 
+        sift_up();         // reorganizar el heap según el criterio
     }
 
     void pop() {
